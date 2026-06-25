@@ -5,7 +5,7 @@ import { CurrentUser } from '../common/current-user.decorator';
 import { UpdateProfileDto } from '../dto/update-profile.dto';
 import { ChangePasswordDto } from '../dto/change-password.dto';
 
-@Controller('api/users')
+@Controller('users')
 @UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
