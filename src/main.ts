@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, RequestMethod } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
@@ -7,7 +7,9 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api', {
+    exclude: [{ path: ':shortCode', method: RequestMethod.GET }],
+  });
 
 // Use Helmet
 app.use(helmet());
