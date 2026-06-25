@@ -12,12 +12,29 @@ async function bootstrap() {
 
   // Enable CORS with configurations from configService
   const configService = app.get(ConfigService);
-  const frontendUrl = configService.get<string>('FRONTEND_URL', 'http://localhost:4200');
-  app.enableCors({
-    origin: frontendUrl,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    credentials: true,
-  });
+
+const allowedOrigins = (
+  configService.get<string>('FRONTEND_URL') ??
+  'http://localhost:4200'
+)
+  .split(',')
+  .map(origin => origin.trim());
+
+app.enableCors({
+  origin: (origin, callback) => {
+    // Allow Postman, curl, etc.
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    callback(new Error(`Origin ${origin} not allowed by CORS`));
+  },
+  credentials: true,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  allowedHeaders: ['Content-Type', 'Authorization'],
+});
 
   // Global Validation Pipe for payload validation & sanitization
   app.useGlobalPipes(
