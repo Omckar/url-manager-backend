@@ -18,7 +18,16 @@ export class RedirectController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:4200');
+    const frontendUrls = this.configService.get<string>('FRONTEND_URL', 'http://localhost:4200')
+      .split(',')
+      .map((url) => url.trim().replace(/\/$/, ''));
+
+    const host = req.headers.host || '';
+    const isLocalRequest = host.includes('localhost') || host.includes('127.0.0.1') || host.includes('3000');
+    let frontendUrl = frontendUrls.find((url) => url.includes('localhost') === isLocalRequest);
+    if (!frontendUrl) {
+      frontendUrl = frontendUrls[0] || 'http://localhost:4200';
+    }
 
     // 1. Retrieve the URL record by short code or custom alias
     const url = await this.urlsService.findByShortCode(shortCode);
