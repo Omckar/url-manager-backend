@@ -7,7 +7,7 @@ import { CreateUrlDto } from '../dto/create-url.dto';
 import { UpdateUrlDto } from '../dto/update-url.dto';
 import { VerifyUrlPasswordDto } from '../dto/verify-url-password.dto';
 
-@Controller('urls')
+@Controller('api/urls')
 export class UrlsController {
   constructor(
     private readonly urlsService: UrlsService,
