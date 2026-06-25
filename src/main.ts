@@ -7,8 +7,10 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Use Helmet for securing HTTP headers
-  app.use(helmet());
+app.setGlobalPrefix('api');
+
+// Use Helmet
+app.use(helmet());
 
   // Enable CORS with configurations from configService
   const configService = app.get(ConfigService);
@@ -29,7 +31,7 @@ app.enableCors({
       return callback(null, true);
     }
 
-    callback(new Error(`Origin ${origin} not allowed by CORS`));
+    return callback(new Error(`Origin ${origin} not allowed by CORS`), false);
   },
   credentials: true,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
