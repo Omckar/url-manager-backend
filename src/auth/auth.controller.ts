@@ -7,25 +7,14 @@ import { LoginDto } from '../dto/login.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  // @Post('register')
-  // async register(@Body() registerDto: RegisterDto) {
-  //   return this.authService.register(
-  //     registerDto.email,
-  //     registerDto.password,
-  //     registerDto.name,
-  //   );
-  // }
-
   @Post('register')
-register(@Body() registerDto: RegisterDto) {
-  console.log('REGISTER HIT');
-  console.log(registerDto);
-
-  return {
-    success: true,
-    data: registerDto,
-  };
-}
+  async register(@Body() registerDto: RegisterDto) {
+    return this.authService.register(
+      registerDto.email,
+      registerDto.password,
+      registerDto.name,
+    );
+  }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
